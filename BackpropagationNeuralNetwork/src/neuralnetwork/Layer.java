@@ -5,6 +5,8 @@
  */
 package neuralnetwork;
 
+import activation.ActivationFunction;
+
 /**
  *
  * @author Richard O'Brien
@@ -15,15 +17,29 @@ public class Layer {
 	
 	private int neuronCount;
 	private int inputCount;
+	
+	ActivationFunction activationFunction;
 
-	public Layer(int neuronCount, int inputCount) {
+	public Layer(int neuronCount, int inputCount, ActivationFunction activationFunction) {
 		this.neuronCount = neuronCount;
 		this.inputCount = inputCount;
+		this.activationFunction = activationFunction;
 		
 		this.neurons = new Neuron[this.neuronCount];
 		
 		for (int i = 0; i < this.neuronCount; i++) {
 			neurons[i] = new Neuron(this.inputCount);
+		}
+	}
+	
+	public void feedForward (double[] inputs) throws Exception {
+		for(Neuron n: neurons) {
+			
+			//Calculate weighted input sum of neuron, including the bias weight
+			double weightInputSum = n.getWeightInputSum(inputs);
+			
+			//Set output of neuron to the result of the activation function
+			n.setOutput(this.activationFunction.calculateActivation(weightInputSum));
 		}
 	}
 

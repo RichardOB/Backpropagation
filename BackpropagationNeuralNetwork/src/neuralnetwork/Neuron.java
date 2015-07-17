@@ -52,6 +52,23 @@ public class Neuron {
 			this.weightDifference[i] = 0.0;
 		}
 	}
+	
+	public double getWeightInputSum (double[] inputs) throws Exception {
+
+		if (inputs.length != this.inputCount - 1) {
+			throw new Exception("Inputs to node do not match node input count!");
+		}
+		
+		//Add bias
+		double result = this.weights[inputs.length];
+		
+		//Multiply inputs by weights
+		for (int i = 0; i < this.inputCount; i++) {
+			result+= this.weights[i] * inputs[i];
+		}
+
+		return result;
+	}
 
 	public int getInputCount() {
 		return inputCount;
