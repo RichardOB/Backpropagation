@@ -42,6 +42,17 @@ public class Layer {
 			n.setOutput(this.activationFunction.calculateActivation(weightInputSum));
 		}
 	}
+	
+	public double[] getOutputs() throws Exception {
+		
+		double[] result = new double[this.neuronCount];
+		
+		for (int i = 0; i < this.neuronCount; i++) {
+			result[i] = this.neurons[i].getOutput();
+		}
+		
+		return result;
+	}
 
 	public int getNeuronCount() {
 		return neuronCount;
@@ -58,7 +69,4 @@ public class Layer {
 	public void setInputCount(int inputCount) {
 		this.inputCount = inputCount;
 	}
-	
-	
-	
 }
