@@ -11,11 +11,13 @@ package DataSet;
  */
 public class GeneralisationSet {
 	
-	double[][] input;
+	public double[][] input;
 	
-	double[][] expectedOutput;
+	public double[][] expectedOutput;
 	
 	int generalisationPatternCount;
+	
+	double generalisationAccuracyTotal = 0.0;
 
 	public GeneralisationSet(double[][] input, double[][] expectedOutput) {
 		this.input = input;
@@ -46,6 +48,20 @@ public class GeneralisationSet {
 	public void setGeneralisationPatternCount(int generalisationPatternCount) {
 		this.generalisationPatternCount = generalisationPatternCount;
 	}
+
+	public double getgeneralisationAccuracyTotal() {
+		return generalisationAccuracyTotal;
+	}
+
+	public void setgeneralisationAccuracyTotal(double generalisationAccuracyTotal) {
+		this.generalisationAccuracyTotal = generalisationAccuracyTotal;
+	}
 	
+	public double getTrainingAccuracyAverage(int epochs) {
+		return this.generalisationAccuracyTotal / epochs;
+	}
 	
+	public void addToTotal(double increment){
+		this.generalisationAccuracyTotal += increment;
+	}
 }

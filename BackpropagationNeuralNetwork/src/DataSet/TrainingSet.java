@@ -11,32 +11,18 @@ package DataSet;
  */
 public class TrainingSet {
 	
-	double[][] input;
+	public double[][] input;
 	
-	double[][] expectedOutput;
+	public double[][] expectedOutput;
 	
 	int trainingPatternCount;
+	
+	double trainingAccuracyTotal = 0.0;
 
 	public TrainingSet(double[][] input, double[][] expectedOutput) {
 		this.input = input;
 		this.expectedOutput = expectedOutput;
 		this.trainingPatternCount = input.length;
-	}
-
-	public double[][] getInput() {
-		return input;
-	}
-
-	public void setInput(double[][] input) {
-		this.input = input;
-	}
-
-	public double[][] getExpectedOutput() {
-		return expectedOutput;
-	}
-
-	public void setExpectedOutput(double[][] expectedOutput) {
-		this.expectedOutput = expectedOutput;
 	}
 
 	public int getTrainingPatternCount() {
@@ -46,6 +32,20 @@ public class TrainingSet {
 	public void setTrainingPatternCount(int trainingPatternCount) {
 		this.trainingPatternCount = trainingPatternCount;
 	}
+
+	public double getTrainingAccuracyTotal() {
+		return trainingAccuracyTotal;
+	}
+
+	public void setTrainingAccuracyTotal(double trainingAccuracyTotal) {
+		this.trainingAccuracyTotal = trainingAccuracyTotal;
+	}
 	
+	public double getTrainingAccuracyAverage(int epochs) {
+		return this.trainingAccuracyTotal / epochs;
+	}
 	
+	public void addToTotal(double increment){
+		this.trainingAccuracyTotal += increment;
+	}
 }
