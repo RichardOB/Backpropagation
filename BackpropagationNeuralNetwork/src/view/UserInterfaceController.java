@@ -5,12 +5,14 @@
  */
 package view;
 
+import java.io.File;
 import java.net.URL;
 import java.util.ResourceBundle;
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
+import javafx.stage.FileChooser;
+import javafx.stage.Stage;
 
 /**
  *
@@ -18,18 +20,52 @@ import javafx.scene.control.Label;
  */
 public class UserInterfaceController implements Initializable {
 	
-	@FXML
-	private Label label;
+	//Settings
+	@FXML 
+	private TextField maxEpochCount;
+	
+	@FXML 
+	private TextField learningRate;
+	
+	@FXML 
+	private TextField momentum;
+	
+	@FXML 
+	private TextField trailCount;
+	
+	//Files
+	
+	@FXML 
+	private FileChooser fileChooser;
 	
 	@FXML
-	private void handleButtonAction(ActionEvent event) {
-		System.out.println("You clicked me!");
-		label.setText("Hello World!");
-	}
+	private File file;
 	
+	@FXML 
+	private TextField inputFilePath;
+	
+	@FXML 
+	private TextField outputFilePath;
+
 	@Override
 	public void initialize(URL url, ResourceBundle rb) {
 		// TODO
 	}	
+	
+	public void openInputFile() {
+		fileChooser = new FileChooser();
+		fileChooser.setTitle("Open Problem Set File");
+		Stage stage = null;
+		file = fileChooser.showOpenDialog(stage);
+		inputFilePath.setText(file.getPath());
+	}
+	
+	public void openOutputFile() {
+		fileChooser = new FileChooser();
+		fileChooser.setTitle("Select Output File");
+		Stage stage = null;
+		file = fileChooser.showOpenDialog(stage);
+		outputFilePath.setText(file.getPath());
+	}
 	
 }
