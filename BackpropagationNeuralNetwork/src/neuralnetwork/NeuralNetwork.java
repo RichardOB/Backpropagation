@@ -32,8 +32,10 @@ public class NeuralNetwork {
 		this.settings = settings;
 		this.activationFunction = activationFunction;
 		
+		System.out.println("Input Neuron Count: " + this.settings.getInputNeuronCount());
+		
 		this.hiddenLayer = new Layer(this.settings.getHiddenNeuronCount(), this.settings.getInputNeuronCount(), this.activationFunction);
-		this.outputLayer = new Layer(this.settings.getHiddenNeuronCount(), this.settings.getInputNeuronCount(), this.activationFunction);
+		this.outputLayer = new Layer(this.settings.getOutputNeuronCount(), this.settings.getHiddenNeuronCount(), this.activationFunction);
 	}
 	
 	public void setupTraining(TrainingSet trainingSet, GeneralisationSet generalisationSet) {
@@ -48,6 +50,8 @@ public class NeuralNetwork {
 		//TODO: Or end when average generalisation acccuracy within threshold
 		while (epochNumber++ < this.settings.getEpochCount()) {
 			
+			System.out.println("epoch: " + epochNumber);
+			
 			//1. Train
 			double trainingAccuracy = startTrainingPhase();
 			
@@ -61,6 +65,9 @@ public class NeuralNetwork {
 			//4. add training/generalisation results to training result file
 			//TODO
 		}
+		
+		System.out.println("Training Accuracy: " + trainingSet.getTrainingAccuracyAverage(epochNumber));
+		System.out.println("Generalisation Accuracy: " + generalisationSet.getGeneralisationAccuracyAverage(epochNumber));
 	}
 	
 	private double startTrainingPhase() throws Exception {
@@ -221,10 +228,25 @@ public class NeuralNetwork {
 		this.outputLayer.feedForward(this.hiddenLayer.getOutputs());
 	}
 	
-	private double calculatePatternError(double[] expectedOutput, double[] actualOutput) {
+	private double calculatePatternError(double[] expectedOutput, double[] actualOutput) throws Exception {
 		//TODO: Calculate signal error
 		
-		return 0.0;
+		if (expectedOutput.length != actualOutput.length) {
+			throw new Exception("Output length (" + actualOutput.length + ") does not match expected output length (" + expectedOutput.length + ")");
+		}
+		
+		double error = 0.0;
+		
+		System.out.println("expected : actual : error");
+		for (int i = 0; i < actualOutput.length; i++) {
+			error += expectedOutput[i] - actualOutput[i];
+			System.out.println(expectedOutput[i] + " : " + actualOutput[i] + " : " + (expectedOutput[i] - actualOutput[i]));
+		}
+		
+		error = error/actualOutput.length;
+		
+		System.out.println("Error: " + error);
+		return error;
 	}
 	
 	private int determinePredictionCorrectness(double error) {

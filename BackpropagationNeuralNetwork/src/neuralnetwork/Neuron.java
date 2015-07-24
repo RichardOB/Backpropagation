@@ -29,8 +29,8 @@ public class Neuron {
 		this.inputCount = inputCount + 1;
 		
 		//Initialise weight and weight difference arrays
-		this.weights = new double[inputCount];
-		this.weightDifference = new double[inputCount];
+		this.weights = new double[this.inputCount];
+		this.weightDifference = new double[this.inputCount];
 		
 		initialiseWeights();
 		
@@ -63,7 +63,7 @@ public class Neuron {
 		double result = this.weights[inputs.length];
 		
 		//Multiply inputs by weights
-		for (int i = 0; i < this.inputCount; i++) {
+		for (int i = 0; i < this.inputCount -1; i++) {
 			result+= this.weights[i] * inputs[i];
 		}
 

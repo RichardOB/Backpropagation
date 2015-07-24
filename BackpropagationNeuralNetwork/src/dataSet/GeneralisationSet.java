@@ -57,7 +57,7 @@ public class GeneralisationSet {
 		this.generalisationAccuracyTotal = generalisationAccuracyTotal;
 	}
 	
-	public double getTrainingAccuracyAverage(int epochs) {
+	public double getGeneralisationAccuracyAverage(int epochs) {
 		return this.generalisationAccuracyTotal / epochs;
 	}
 	
