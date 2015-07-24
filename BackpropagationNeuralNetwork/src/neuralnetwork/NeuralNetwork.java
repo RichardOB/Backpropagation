@@ -5,8 +5,8 @@
  */
 package neuralnetwork;
 
-import DataSet.GeneralisationSet;
-import DataSet.TrainingSet;
+import dataSet.GeneralisationSet;
+import dataSet.TrainingSet;
 import activation.ActivationFunction;
 
 /**
