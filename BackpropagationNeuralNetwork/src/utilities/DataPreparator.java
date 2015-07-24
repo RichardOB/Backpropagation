@@ -27,7 +27,7 @@ public class DataPreparator {
 	
 	private GeneralisationSet generalisationSet;
 	
-	public void readProblemSetFromFile(String path) throws FileNotFoundException, IOException {
+	public void readProblemSetFromFile(String path) throws FileNotFoundException, IOException, Exception {
 		File file = new File(path);
 		
 		unprocessedProblemSet = new ArrayList<>();
@@ -48,7 +48,9 @@ public class DataPreparator {
 			}
 		}
 		
-		printFile(unprocessedProblemSet);
+		verifyDataCompleteness();
+		
+		//printFile(unprocessedProblemSet);
 	}
 	
 	private void printFile(List<Double[]> input) {
@@ -80,6 +82,8 @@ public class DataPreparator {
 		double [][] output = new double[unprocessedProblemSet.size()][outputCount];
 		
 		//Shuffle data
+		
+		//Split Data into input and output sets
 		for (int i = 0; i < unprocessedProblemSet.size(); i++) {
 			
 			Double[] problemInstance = unprocessedProblemSet.get(i);
@@ -92,16 +96,26 @@ public class DataPreparator {
 			
 			for (int j = 0; j < problemInstance.length; j++) {
 				
-				if (j < outputCount) {
+				//System.out.println("i: " + i);
+				//System.out.println("j: " + j);
+				//System.out.println("Count: " + count);
+				
+				if (j < inputCount) {
+					//System.out.println("\tj < inputCount");
 					input[i][j] = problemInstance[j];
+					//System.out.println("\tinput[" + i + "][" + j + "]");
 				}
-				else if (j >= outputCount) {
+				else if (j >= inputCount) {
+					//System.out.println("\tj >= inputCount");
 					output[i][count++] = problemInstance[j];
+					//System.out.println("\toutput[" + i + "][" + (count - 1) + "]");
 				}
 				else {
 					throw new Exception("input and output count have disointability issues");
 				}
 			}
+			
+			//System.out.println("");
 	
 		}
 		
@@ -123,14 +137,26 @@ public class DataPreparator {
 		double[][] generalisationDataOutput = new double[generalisationDataCount][outputCount];
 		
 		//Copy last 20% of input data to generalisationDataInput
-		System.arraycopy(input, trainingDataCount, generalisationDataInput, trainingDataCount, output.length - trainingDataCount);
+		System.arraycopy(input, trainingDataCount, generalisationDataInput, 0, output.length - trainingDataCount);
 		//Copy last 20% of output data to generalisationDataOutput
-		System.arraycopy(output, trainingDataCount, generalisationDataOutput, trainingDataCount, output.length - trainingDataCount);
+		System.arraycopy(output, trainingDataCount, generalisationDataOutput, 0, output.length - trainingDataCount);
 		
 		//Add data to generalisation set
 		this.generalisationSet = new GeneralisationSet(generalisationDataInput, generalisationDataOutput);
 		
 		return inputCount;
+	}
+	
+	private void verifyDataCompleteness() throws Exception {
+		
+		int expectedSize = unprocessedProblemSet.get(0).length;
+		
+		for (int i = 0; i < unprocessedProblemSet.size(); i++) {
+			
+			if (unprocessedProblemSet.get(i).length != expectedSize) {
+				throw new Exception("Problem set is incomplete!");
+			}
+		}
 	}
 
 	public TrainingSet getTrainingSet() {
