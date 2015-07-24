@@ -6,6 +6,7 @@
 package view;
 
 import java.io.File;
+import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 import javafx.fxml.FXML;
@@ -13,6 +14,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.TextField;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
+import utilities.DataPreparator;
 
 /**
  *
@@ -52,12 +54,15 @@ public class UserInterfaceController implements Initializable {
 		// TODO
 	}	
 	
-	public void openInputFile() {
+	public void openInputFile() throws IOException {
 		fileChooser = new FileChooser();
 		fileChooser.setTitle("Open Problem Set File");
 		Stage stage = null;
 		file = fileChooser.showOpenDialog(stage);
 		inputFilePath.setText(file.getPath());
+		
+		DataPreparator dataPrep = new DataPreparator();
+		dataPrep.readProblemSetFromFile(inputFilePath.getText());
 	}
 	
 	public void openOutputFile() {
