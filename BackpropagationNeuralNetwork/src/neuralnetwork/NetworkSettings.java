@@ -10,24 +10,28 @@ package neuralnetwork;
  * @author Richard O'Brien
  */
 public class NetworkSettings {
-	
+
 	private double momentum;
-	
+
 	private double learningRate;
-	
-	private double epochCount;
-	
+
+	private int epochCount;
+
 	private int inputNeuronCount;
-	
+
 	private int outputNeuronCount;
-	
+
 	//TODO: Change this to an array where size = hidden layer count,
 	//representing number of neurons at each hidden layer
 	private int hiddenNeuronCount;
-	
+
 	private double failureThreshold;
 
-	public NetworkSettings(double momentum, double learningRate, double epochCount, int inputNeuronCount, int outputNeuronCount, int hiddenNeuronCount, double failureThreshold) {
+	public NetworkSettings() {
+
+	}
+
+	public NetworkSettings(double momentum, double learningRate, int epochCount, int inputNeuronCount, int outputNeuronCount, int hiddenNeuronCount, double failureThreshold) {
 		this.momentum = momentum;
 		this.learningRate = learningRate;
 		this.epochCount = epochCount;
@@ -53,11 +57,11 @@ public class NetworkSettings {
 		this.learningRate = learningRate;
 	}
 
-	public double getEpochCount() {
+	public int getEpochCount() {
 		return epochCount;
 	}
 
-	public void setEpochCount(double epochCount) {
+	public void setEpochCount(int epochCount) {
 		this.epochCount = epochCount;
 	}
 
