@@ -35,6 +35,15 @@ public class UserInterfaceController implements Initializable {
 	@FXML 
 	private TextField trailCount;
 	
+	@FXML 
+	private TextField hiddenNeuronCount;
+	
+	@FXML 
+	private TextField errorThreshold;
+	
+	@FXML 
+	private TextField outputCount;
+	
 	//Files
 	
 	@FXML 
