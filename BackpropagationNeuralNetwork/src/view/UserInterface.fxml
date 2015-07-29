@@ -98,7 +98,7 @@
                         </AnchorPane>
                       <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="530.0" prefWidth="426.0" styleClass="background" stylesheets="@theme.css">
                            <children>
-                              <Button layoutX="434.0" layoutY="11.0" mnemonicParsing="false" prefHeight="33.0" prefWidth="105.0" styleClass="button-run" text="Run" />
+                              <Button layoutX="434.0" layoutY="11.0" mnemonicParsing="false" onAction="#train" prefHeight="33.0" prefWidth="105.0" styleClass="button-run" text="Run" />
                               <Button layoutX="327.0" layoutY="11.0" mnemonicParsing="false" text="Refresh" />
                            </children>
                         </AnchorPane>

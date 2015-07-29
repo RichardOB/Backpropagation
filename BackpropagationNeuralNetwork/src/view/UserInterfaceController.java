@@ -5,6 +5,7 @@
  */
 package view;
 
+import activation.Sigmoid;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
@@ -14,6 +15,8 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.TextField;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
+import neuralnetwork.NetworkSettings;
+import neuralnetwork.NeuralNetwork;
 import utilities.DataPreparator;
 
 /**
@@ -22,7 +25,7 @@ import utilities.DataPreparator;
  */
 public class UserInterfaceController implements Initializable {
 	
-	//Settings
+	//Neural Network
 	@FXML 
 	private TextField maxEpochCount;
 	
@@ -41,6 +44,8 @@ public class UserInterfaceController implements Initializable {
 	@FXML 
 	private TextField errorThreshold;
 	
+	//Data Set Settings
+	
 	@FXML 
 	private TextField outputCount;
 	
@@ -57,21 +62,25 @@ public class UserInterfaceController implements Initializable {
 	
 	@FXML 
 	private TextField outputFilePath;
+	
+	//Controller fields
+	NetworkSettings settings;
+	
+	NeuralNetwork neuralNetwork;
+	
+	DataPreparator dataPrep;
 
 	@Override
 	public void initialize(URL url, ResourceBundle rb) {
 		// TODO
 	}	
 	
-	public void openInputFile() throws IOException {
+	public void openInputFile() {
 		fileChooser = new FileChooser();
 		fileChooser.setTitle("Open Problem Set File");
 		Stage stage = null;
 		file = fileChooser.showOpenDialog(stage);
 		inputFilePath.setText(file.getPath());
-		
-		DataPreparator dataPrep = new DataPreparator();
-		dataPrep.readProblemSetFromFile(inputFilePath.getText());
 	}
 	
 	public void openOutputFile() {
@@ -81,5 +90,36 @@ public class UserInterfaceController implements Initializable {
 		file = fileChooser.showOpenDialog(stage);
 		outputFilePath.setText(file.getPath());
 	}
+	
+	public void train() throws IOException, Exception {
+		
+		dataPrep = new DataPreparator();
+		dataPrep.readProblemSetFromFile(inputFilePath.getText());
+		
+		//preprocess data
+		
+		//separate data into non overlapping sets (Training vs Generalisation)
+		int inputCount = dataPrep.preprocessData(Integer.parseInt(outputCount.getText()));
+		
+		settings = new NetworkSettings();
+		
+		settings.setMomentum(Double.parseDouble(momentum.getText()));
+		settings.setLearningRate(Double.parseDouble(learningRate.getText()));
+		settings.setEpochCount(Integer.parseInt(maxEpochCount.getText()));
+		settings.setInputNeuronCount(inputCount);
+		settings.setOutputNeuronCount(Integer.parseInt(outputCount.getText()));
+		settings.setHiddenNeuronCount(Integer.parseInt(hiddenNeuronCount.getText()));
+		settings.setFailureThreshold(Double.parseDouble(errorThreshold.getText()));
+		
+		
+		//NetworkSettings settings, ActivationFunction activationFunction
+		neuralNetwork = new NeuralNetwork(settings, new Sigmoid());
+		
+		neuralNetwork.setupTraining(dataPrep.getTrainingSet(), dataPrep.getGeneralisationSet());
+		neuralNetwork.train();
+		System.out.println("Done!");
+	}
+	
+	
 	
 }
