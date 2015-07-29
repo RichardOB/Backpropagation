@@ -66,8 +66,8 @@ public class NeuralNetwork {
 			//TODO
 		}
 		
-		System.out.println("Training Accuracy: " + trainingSet.getTrainingAccuracyAverage(epochNumber));
-		System.out.println("Generalisation Accuracy: " + generalisationSet.getGeneralisationAccuracyAverage(epochNumber));
+		//System.out.println("Training Accuracy: " + trainingSet.getTrainingAccuracyAverage(epochNumber));
+		//System.out.println("Generalisation Accuracy: " + generalisationSet.getGeneralisationAccuracyAverage(epochNumber));
 	}
 	
 	private double startTrainingPhase() throws Exception {
@@ -95,6 +95,8 @@ public class NeuralNetwork {
 			backPropagate(this.trainingSet.input[i]);
 		}
 		
+		System.out.println("Training Accuracy: " + accuracy/this.trainingSet.getTrainingPatternCount() * 100.0);
+		
 		//Calculate training accuracy of epoch
 		return accuracy / this.trainingSet.getTrainingPatternCount() * 100.0;
 	}
@@ -112,6 +114,8 @@ public class NeuralNetwork {
 			//Determine if prediction was correct
 			accuracy += determinePredictionCorrectness(error);
 		}
+		
+		System.out.println("Generalisation Accuracy: " + accuracy/this.generalisationSet.getGeneralisationPatternCount() * 100.0);
 		
 		//Calculate generalisation accuracy of epoch
 		return accuracy / this.generalisationSet.getGeneralisationPatternCount() * 100.0;
@@ -237,15 +241,14 @@ public class NeuralNetwork {
 		
 		double error = 0.0;
 		
-		System.out.println("expected : actual : error");
+		//System.out.println("expected : actual : error");
 		for (int i = 0; i < actualOutput.length; i++) {
-			error += expectedOutput[i] - actualOutput[i];
-			System.out.println(expectedOutput[i] + " : " + actualOutput[i] + " : " + (expectedOutput[i] - actualOutput[i]));
+			error += Math.abs( Math.abs(expectedOutput[i]) - Math.abs(actualOutput[i]));
+			//System.out.println(expectedOutput[i] + " : " + actualOutput[i] + " : " + Math.abs( Math.abs(expectedOutput[i]) - Math.abs(actualOutput[i])));
 		}
 		
 		error = error/actualOutput.length;
 		
-		System.out.println("Error: " + error);
 		return error;
 	}
 	
