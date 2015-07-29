@@ -199,16 +199,16 @@ public class NeuralNetwork {
 				//Update weight between hidden neuron i and input j
 				n.weights[j] += n.weightDifference[j];							
 			}
-			
+
 			//calculate the bias/threshold weight difference
-			n.weightDifference[this.settings.getHiddenNeuronCount()] = 
+			n.weightDifference[this.settings.getInputNeuronCount()] = 
 										-this.settings.getLearningRate() * 
 										n.getSignalError() + 
 										this.settings.getMomentum() * 
-										n.weightDifference[this.settings.getHiddenNeuronCount()];
+										n.weightDifference[this.settings.getInputNeuronCount()];
 			
 			//Update biaa/threshold weight
-			n.weights[this.settings.getHiddenNeuronCount()] += n.weightDifference[this.settings.getHiddenNeuronCount()];
+			n.weights[this.settings.getInputNeuronCount()] += n.weightDifference[this.settings.getInputNeuronCount()];
 		}
 	}
 	
