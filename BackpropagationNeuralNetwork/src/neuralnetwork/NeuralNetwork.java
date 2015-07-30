@@ -73,6 +73,7 @@ public class NeuralNetwork {
 	private double startTrainingPhase() throws Exception {
 		
 		double accuracy = 0;
+		double errorAccumulator = 0;
 		
 		for (int i = 0; i < this.trainingSet.getTrainingPatternCount(); i++) {
 			
@@ -84,6 +85,7 @@ public class NeuralNetwork {
 			
 			//3. Calculate neural network error
 			double error = calculatePatternError(this.trainingSet.expectedOutput[i], actual);
+			errorAccumulator += error;
 			
 			//4. Determine if prediction was correct
 			accuracy += determinePredictionCorrectness(error);
@@ -95,7 +97,8 @@ public class NeuralNetwork {
 			backPropagate(this.trainingSet.input[i]);
 		}
 		
-		System.out.println("Training Accuracy: " + accuracy/this.trainingSet.getTrainingPatternCount() * 100.0);
+		//System.out.println("Training Accuracy: " + accuracy/this.trainingSet.getTrainingPatternCount() * 100.0);
+		System.out.println("Training Average Error: " + errorAccumulator/this.trainingSet.getTrainingPatternCount() * 100);
 		
 		//Calculate training accuracy of epoch
 		return accuracy / this.trainingSet.getTrainingPatternCount() * 100.0;
@@ -104,18 +107,21 @@ public class NeuralNetwork {
 	private double startTestingPhase() throws Exception {
 		
 		double accuracy = 0;
+		double errorAccumulator = 0;
 		
 		for (int i = 0; i < this.generalisationSet.getGeneralisationPatternCount(); i++) {
 			
 			double[] actual = getOutput(this.generalisationSet.input[i]);
 			
 			double error = calculatePatternError(this.generalisationSet.expectedOutput[i], actual);
+			errorAccumulator += error;
 			
 			//Determine if prediction was correct
 			accuracy += determinePredictionCorrectness(error);
 		}
 		
-		System.out.println("Generalisation Accuracy: " + accuracy/this.generalisationSet.getGeneralisationPatternCount() * 100.0);
+		//System.out.println("Generalisation Accuracy: " + accuracy/this.generalisationSet.getGeneralisationPatternCount() * 100.0);
+		System.out.println("Generalisation Average Error: " + errorAccumulator/this.generalisationSet.getGeneralisationPatternCount() * 100);
 		
 		//Calculate generalisation accuracy of epoch
 		return accuracy / this.generalisationSet.getGeneralisationPatternCount() * 100.0;
@@ -243,7 +249,7 @@ public class NeuralNetwork {
 		
 		//System.out.println("expected : actual : error");
 		for (int i = 0; i < actualOutput.length; i++) {
-			error += Math.abs( Math.abs(expectedOutput[i]) - Math.abs(actualOutput[i]));
+			error += Math.pow((expectedOutput[i] - actualOutput[i]),2);
 			//System.out.println(expectedOutput[i] + " : " + actualOutput[i] + " : " + Math.abs( Math.abs(expectedOutput[i]) - Math.abs(actualOutput[i])));
 		}
 		
