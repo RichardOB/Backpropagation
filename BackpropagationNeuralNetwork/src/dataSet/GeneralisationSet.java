@@ -64,4 +64,22 @@ public class GeneralisationSet {
 	public void addToTotal(double increment){
 		this.generalisationAccuracyTotal += increment;
 	}
+	
+	public void print() {
+		System.out.println("Generalisation Set:\n");
+		for (int i = 0; i < generalisationPatternCount; i++) {
+			
+			for (int j = 0; j < input[i].length; j++) {
+				System.out.print(input[i][j] + " ");
+			}
+			
+			System.out.print(": ");
+			
+			for (int j = 0; j < expectedOutput[i].length; j++) {
+				System.out.print(expectedOutput[i][j] + " ");
+			}
+			
+			System.out.println("");
+		}
+	}
 }
