@@ -32,15 +32,14 @@ public class NeuralNetwork {
 		this.settings = settings;
 		this.activationFunction = activationFunction;
 		
-		System.out.println("Input Neuron Count: " + this.settings.getInputNeuronCount());
-		
+		//neuronCount, inputCount, activationFunction
 		this.hiddenLayer = new Layer(this.settings.getHiddenNeuronCount(), this.settings.getInputNeuronCount(), this.activationFunction);
 		this.outputLayer = new Layer(this.settings.getOutputNeuronCount(), this.settings.getHiddenNeuronCount(), this.activationFunction);
 	}
 	
 	public void setupTraining(TrainingSet trainingSet, GeneralisationSet generalisationSet) {
 		this.trainingSet = trainingSet;
-		this.generalisationSet = generalisationSet;		
+		this.generalisationSet = generalisationSet;	
 	}
 	
 	public void train() throws Exception {
@@ -74,6 +73,7 @@ public class NeuralNetwork {
 		
 		double accuracy = 0;
 		double errorAccumulator = 0;
+		//System.out.println("\nTRAINING:");
 		
 		for (int i = 0; i < this.trainingSet.getTrainingPatternCount(); i++) {
 			
@@ -98,7 +98,7 @@ public class NeuralNetwork {
 		}
 		
 		//System.out.println("Training Accuracy: " + accuracy/this.trainingSet.getTrainingPatternCount() * 100.0);
-		System.out.println("Training Average Error: " + errorAccumulator/this.trainingSet.getTrainingPatternCount() * 100);
+		System.out.println("Training Average Error: " + errorAccumulator/this.trainingSet.getTrainingPatternCount());
 		
 		//Calculate training accuracy of epoch
 		return accuracy / this.trainingSet.getTrainingPatternCount() * 100.0;
@@ -108,6 +108,7 @@ public class NeuralNetwork {
 		
 		double accuracy = 0;
 		double errorAccumulator = 0;
+		//System.out.println("\nTESTING:");
 		
 		for (int i = 0; i < this.generalisationSet.getGeneralisationPatternCount(); i++) {
 			
@@ -124,7 +125,7 @@ public class NeuralNetwork {
 		System.out.println("Generalisation Average Error: " + errorAccumulator/this.generalisationSet.getGeneralisationPatternCount() * 100);
 		
 		//Calculate generalisation accuracy of epoch
-		return accuracy / this.generalisationSet.getGeneralisationPatternCount() * 100.0;
+		return accuracy / this.generalisationSet.getGeneralisationPatternCount();
 	}
 	
 	public void calculateSignalErrors(double[] targetOutput) throws Exception {

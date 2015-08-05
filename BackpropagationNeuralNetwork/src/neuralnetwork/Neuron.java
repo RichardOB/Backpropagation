@@ -29,9 +29,11 @@ public class Neuron {
 		this.inputCount = inputCount + 1;
 		
 		//Initialise weight and weight difference arrays
+		//Weight difference array records delta weights for calculations
 		this.weights = new double[this.inputCount];
 		this.weightDifference = new double[this.inputCount];
 		
+		//initialise weights randomly and set weight defferences to 0.0
 		initialiseWeights();
 		
 	}
@@ -39,6 +41,7 @@ public class Neuron {
 	private void initialiseWeights() {
 		
 		Random random = new Random();
+		//Max = 1.0 / sqrt(inputCount), Min = -Max
 		double max = 1.0 / Math.sqrt(this.inputCount);
 		double min = -max;
 		double range = max - min;

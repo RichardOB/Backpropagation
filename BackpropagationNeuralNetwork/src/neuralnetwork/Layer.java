@@ -25,8 +25,10 @@ public class Layer {
 		this.inputCount = inputCount;
 		this.activationFunction = activationFunction;
 		
+		//create array of neurons according to neuron count of layer
 		this.neurons = new Neuron[this.neuronCount];
 		
+		//initialise each neuron with the relevant input count (i.e. without bias)
 		for (int i = 0; i < this.neuronCount; i++) {
 			neurons[i] = new Neuron(this.inputCount);
 		}
