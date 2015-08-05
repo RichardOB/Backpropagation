@@ -92,7 +92,6 @@ public class DataPreparator {
 		}
 	}
 		
-	
 	public int preprocessData(int outputCount) throws Exception {
 		
 		inputCount = unprocessedProblemSet.get(0).length - outputCount;
@@ -127,32 +126,20 @@ public class DataPreparator {
 		}
 
 		//Alter range of inputs
-		double[][] sortedInputs = new double[input.length][input[0].length];
-		System.arraycopy(input, 0, sortedInputs, 0, input.length);
-			
-		sortedInputs = alterRange(input, -Math.sqrt(3.0), Math.sqrt(3.0));
+		input = alterRange(input, -Math.sqrt(3.0), Math.sqrt(3.0));
 		
-		//Set inputs to sorted array
-		System.arraycopy(sortedInputs, 0, input, 0, sortedInputs.length);
+		//printValueArray(scaledInputs);
 		
-		
-		//Alter range of outputs
-		double[][] sortedOutputs = new double[output.length][output[0].length];
-		System.arraycopy(output, 0, sortedOutputs, 0, output.length);
-		
-		sortedOutputs = alterRange(output, 0.0, 1.0);
-		
-		//Set outputs to sorted array
-		System.arraycopy(sortedOutputs, 0, output, 0, sortedOutputs.length);
+		//Alter range of outputs	
+		output = alterRange(output, 0.0, 1.0);
 		
 		splitDataSet(outputCount);
 		return inputCount;
 	}
 	
 	private double[][] alterRange(double[][] unsortedData, double tsMin, double tsMax) {
-		
-		double[][] sortedData = new double[unsortedData.length][unsortedData[0].length];
-		System.arraycopy(unsortedData, 0, sortedData, 0, unsortedData.length);
+
+		double[][] sortedData = DeepCopy.deepCopy(unsortedData);
 			
 		//For all inputs
 		for (int col = 0; col < sortedData[0].length; col ++) {
@@ -172,15 +159,14 @@ public class DataPreparator {
 			double tuMin = sortedData[0][col];
 			double tuMax = sortedData[sortedData.length - 1][col];
 			
-			//calculate new scaled values
-			for (double[] sortedInput : sortedData) {
-				double tu = sortedInput[col];
+			//calculate new scaled values of unsorted data
+			for (double[] unsortedInput : unsortedData) {
+				double tu = unsortedInput[col];
 				double ts = ((tu - tuMin)/(tuMax - tuMin)) * (tsMax - tsMin) + tsMin;
-				sortedInput[col] = ts;
+				unsortedInput[col] = ts;
 			}
         }
-		
-		return sortedData;
+		return unsortedData;
 	}
 	
 	public int splitDataSet(int outputCount) throws Exception {
