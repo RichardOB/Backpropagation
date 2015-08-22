@@ -15,6 +15,11 @@ public class Linear implements ActivationFunction {
 	public double calculateActivation(double input) {
 		return input;
 	}
+
+	@Override
+	public double calculateDirivative(double nOutput) {
+		return 1.0;
+	}
 	
 	
 }

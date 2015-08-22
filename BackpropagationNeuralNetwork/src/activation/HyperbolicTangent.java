@@ -19,5 +19,10 @@ public class HyperbolicTangent implements ActivationFunction{
 		
 		return dividend/divisor;
 	}
+
+	@Override
+	public double calculateDirivative(double nOutput) {
+		return 1 - Math.pow(nOutput, 2);
+	}
 	
 }

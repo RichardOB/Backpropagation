@@ -17,4 +17,10 @@ public class Sigmoid implements ActivationFunction{
 		
 		return 1/divisor;
 	}
+
+	@Override
+	public double calculateDirivative(double nOutput) {
+		return (1 - nOutput) * nOutput;
+	}
+
 }

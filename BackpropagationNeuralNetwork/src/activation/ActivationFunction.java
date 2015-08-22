@@ -12,4 +12,6 @@ package activation;
 public interface ActivationFunction {
 	
 	double calculateActivation (double input);
+	
+	double calculateDirivative (double input);
 }
