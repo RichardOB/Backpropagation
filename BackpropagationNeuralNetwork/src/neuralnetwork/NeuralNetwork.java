@@ -87,6 +87,8 @@ public class NeuralNetwork {
 			double error = calculatePatternError(this.trainingSet.expectedOutput[i], actual);
 			errorAccumulator += error;
 			
+			System.out.println(error);
+			
 			//4. Determine if prediction was correct
 			accuracy += determinePredictionCorrectness(error);
 			
@@ -94,14 +96,15 @@ public class NeuralNetwork {
 			calculateSignalErrors(this.trainingSet.expectedOutput[i]);
 			
 			//6. Backpropagation to adjust weights
-			backPropagate(this.trainingSet.input[i]);
+			//backPropagate(this.trainingSet.input[i]);
 		}
 		
+		errorAccumulator = errorAccumulator/this.trainingSet.getTrainingPatternCount();
 		//System.out.println("Training Accuracy: " + accuracy/this.trainingSet.getTrainingPatternCount() * 100.0);
-		System.out.println("Training Average Error: " + errorAccumulator/this.trainingSet.getTrainingPatternCount());
+		System.out.println("Training Average Error: " + errorAccumulator);
 		
-		//Calculate training accuracy of epoch
-		return accuracy / this.trainingSet.getTrainingPatternCount() * 100.0;
+		//Calculate training accuracy (MSE) of epoch
+		return errorAccumulator;
 	}
 	
 	private double startTestingPhase() throws Exception {
@@ -117,15 +120,18 @@ public class NeuralNetwork {
 			double error = calculatePatternError(this.generalisationSet.expectedOutput[i], actual);
 			errorAccumulator += error;
 			
+			System.out.println(error);
+			
 			//Determine if prediction was correct
 			accuracy += determinePredictionCorrectness(error);
 		}
 		
+		errorAccumulator = errorAccumulator/this.generalisationSet.getGeneralisationPatternCount();
 		//System.out.println("Generalisation Accuracy: " + accuracy/this.generalisationSet.getGeneralisationPatternCount() * 100.0);
-		System.out.println("Generalisation Average Error: " + errorAccumulator/this.generalisationSet.getGeneralisationPatternCount() * 100);
+		System.out.println("Generalisation Average Error: " + errorAccumulator);
 		
 		//Calculate generalisation accuracy of epoch
-		return accuracy / this.generalisationSet.getGeneralisationPatternCount();
+		return errorAccumulator;
 	}
 	
 	public void calculateSignalErrors(double[] targetOutput) throws Exception {
@@ -254,7 +260,8 @@ public class NeuralNetwork {
 			//System.out.println(expectedOutput[i] + " : " + actualOutput[i] + " : " + Math.abs( Math.abs(expectedOutput[i]) - Math.abs(actualOutput[i])));
 		}
 		
-		error = error/actualOutput.length;
+		//WHY ARE WE DOING THIS????
+		//error = error/actualOutput.length;
 		
 		return error;
 	}
