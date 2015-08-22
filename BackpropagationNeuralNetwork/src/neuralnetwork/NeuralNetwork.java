@@ -46,6 +46,9 @@ public class NeuralNetwork {
 		
 		int epochNumber = 0;
 		
+		double prevTrainingErr = 0.0;
+		double prevGeneralisationErr = 0.0;
+		
 		//TODO: Or end when average generalisation acccuracy within threshold
 		while (epochNumber++ < this.settings.getEpochCount()) {
 			
@@ -53,9 +56,17 @@ public class NeuralNetwork {
 			
 			//1. Train
 			double trainingAccuracy = startTrainingPhase();
+			boolean better = (prevTrainingErr - trainingAccuracy) > 0;
+			System.out.println("Training Error Difference: " + better);
+			
+			prevTrainingErr = trainingAccuracy;
 			
 			//2. Test
 			double generalisationAccuracy = startTestingPhase();
+			better = (prevGeneralisationErr - generalisationAccuracy) > 0;
+			System.out.println("Generalisation Error Better: " + better);
+			
+			prevGeneralisationErr = generalisationAccuracy;
 			
 			//3. Add to training and generalisation totals
 			this.trainingSet.addToTotal(trainingAccuracy);
@@ -87,7 +98,7 @@ public class NeuralNetwork {
 			double error = calculatePatternError(this.trainingSet.expectedOutput[i], actual);
 			errorAccumulator += error;
 			
-			System.out.println(error);
+			//System.out.println(error);
 			
 			//4. Determine if prediction was correct
 			accuracy += determinePredictionCorrectness(error);
@@ -96,7 +107,7 @@ public class NeuralNetwork {
 			calculateSignalErrors(this.trainingSet.expectedOutput[i]);
 			
 			//6. Backpropagation to adjust weights
-			//backPropagate(this.trainingSet.input[i]);
+			backPropagate(this.trainingSet.input[i]);
 		}
 		
 		errorAccumulator = errorAccumulator/this.trainingSet.getTrainingPatternCount();
@@ -120,7 +131,7 @@ public class NeuralNetwork {
 			double error = calculatePatternError(this.generalisationSet.expectedOutput[i], actual);
 			errorAccumulator += error;
 			
-			System.out.println(error);
+			//System.out.println(error);
 			
 			//Determine if prediction was correct
 			accuracy += determinePredictionCorrectness(error);
@@ -143,6 +154,8 @@ public class NeuralNetwork {
 			
 			double nOutput = n.getOutput();
 			
+			//TODO: Experiment with negative sign (Not sure why it was there)
+			//n.setSignalError(-(targetOutput[i] - nOutput) * (1 - nOutput) * nOutput);
 			n.setSignalError(-(targetOutput[i] - nOutput) * (1 - nOutput) * nOutput);
 		}
 		
