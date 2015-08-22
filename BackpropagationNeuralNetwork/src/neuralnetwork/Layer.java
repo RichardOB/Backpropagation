@@ -71,4 +71,12 @@ public class Layer {
 	public void setInputCount(int inputCount) {
 		this.inputCount = inputCount;
 	}
+	
+	public double calculateSignalError(double target, double nOutput) {
+		return -(target - nOutput) * activationFunction.calculateDirivative(nOutput);
+	}
+	
+	public double calculateSignalError(double n2SignalError, double n1Output, double n2Weight) {
+		return n2SignalError * n2Weight * activationFunction.calculateDirivative(n1Output);
+	}
 }

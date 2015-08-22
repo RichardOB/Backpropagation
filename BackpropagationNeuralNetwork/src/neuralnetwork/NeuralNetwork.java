@@ -156,7 +156,8 @@ public class NeuralNetwork {
 			
 			//TODO: Experiment with negative sign (Not sure why it was there)
 			//n.setSignalError(-(targetOutput[i] - nOutput) * (1 - nOutput) * nOutput);
-			n.setSignalError(-(targetOutput[i] - nOutput) * (1 - nOutput) * nOutput);
+			//n.setSignalError(-(targetOutput[i] - nOutput) * (1 - nOutput) * nOutput);
+			n.setSignalError(outputLayer.calculateSignalError(targetOutput[i], nOutput));
 		}
 		
 		//Calculate the signal error for each hidden unit
@@ -172,7 +173,8 @@ public class NeuralNetwork {
 				
 				//Backpropagate signal error from a single output to determine 
 				//the current hidden unit neuron's error contribution to the output node. 
-				sum += n2.getSignalError() * n2.weights[i] * (1 - n1.getOutput()) * n1.getOutput();
+				//sum += n2.getSignalError() * n2.weights[i] * (1 - n1.getOutput()) * n1.getOutput();
+				sum += hiddenLayer.calculateSignalError(n2.getSignalError(), n1.getOutput(), n2.weights[i]);
 			}
 			
 			//Set current hidden unit neuron's total error contribution
