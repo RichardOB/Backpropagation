@@ -28,13 +28,12 @@ public class NeuralNetwork {
 	
 	Layer outputLayer;
 
-	public NeuralNetwork(NetworkSettings settings, ActivationFunction activationFunction) {
+	public NeuralNetwork(NetworkSettings settings, ActivationFunction activationFunctionHidden, ActivationFunction activationFunctionOutput) {
 		this.settings = settings;
-		this.activationFunction = activationFunction;
 		
 		//neuronCount, inputCount, activationFunction
-		this.hiddenLayer = new Layer(this.settings.getHiddenNeuronCount(), this.settings.getInputNeuronCount(), this.activationFunction);
-		this.outputLayer = new Layer(this.settings.getOutputNeuronCount(), this.settings.getHiddenNeuronCount(), this.activationFunction);
+		this.hiddenLayer = new Layer(this.settings.getHiddenNeuronCount(), this.settings.getInputNeuronCount(), activationFunctionHidden);
+		this.outputLayer = new Layer(this.settings.getOutputNeuronCount(), this.settings.getHiddenNeuronCount(), activationFunctionOutput);
 	}
 	
 	public void setupTraining(TrainingSet trainingSet, GeneralisationSet generalisationSet) {
@@ -56,14 +55,14 @@ public class NeuralNetwork {
 			
 			//1. Train
 			double trainingAccuracy = startTrainingPhase();
-			boolean better = (prevTrainingErr - trainingAccuracy) > 0;
+			boolean better = prevTrainingErr >= trainingAccuracy;
 			System.out.println("Training Error Difference: " + better);
 			
 			prevTrainingErr = trainingAccuracy;
 			
 			//2. Test
 			double generalisationAccuracy = startTestingPhase();
-			better = (prevGeneralisationErr - generalisationAccuracy) > 0;
+			better = prevGeneralisationErr >= generalisationAccuracy;
 			System.out.println("Generalisation Error Better: " + better);
 			
 			prevGeneralisationErr = generalisationAccuracy;

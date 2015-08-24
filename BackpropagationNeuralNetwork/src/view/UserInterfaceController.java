@@ -5,6 +5,8 @@
  */
 package view;
 
+import activation.HyperbolicTangent;
+import activation.Linear;
 import activation.Sigmoid;
 import java.io.File;
 import java.io.IOException;
@@ -99,7 +101,7 @@ public class UserInterfaceController implements Initializable {
 		//preprocess data
 		
 		//separate data into non overlapping sets (Training vs Generalisation)
-		int inputCount = dataPrep.preprocessData(Integer.parseInt(outputCount.getText()));
+		int inputCount = dataPrep.preprocessData(Integer.parseInt(outputCount.getText()), new Sigmoid(), new Linear());
 		
 		settings = new NetworkSettings();
 		
@@ -113,7 +115,7 @@ public class UserInterfaceController implements Initializable {
 		
 		
 		//NetworkSettings settings, ActivationFunction activationFunction
-		neuralNetwork = new NeuralNetwork(settings, new Sigmoid());
+		neuralNetwork = new NeuralNetwork(settings, new Sigmoid(), new Linear());
 		
 		neuralNetwork.setupTraining(dataPrep.getTrainingSet(), dataPrep.getGeneralisationSet());
 		neuralNetwork.train();

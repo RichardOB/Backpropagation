@@ -5,6 +5,8 @@
  */
 package utilities;
 
+import activation.ActivationFunction;
+import activation.Sigmoid;
 import dataSet.GeneralisationSet;
 import dataSet.TrainingSet;
 import java.io.BufferedReader;
@@ -92,7 +94,7 @@ public class DataPreparator {
 		}
 	}
 		
-	public int preprocessData(int outputCount) throws Exception {
+	public int preprocessData(int outputCount, ActivationFunction activationFunctionHidden, ActivationFunction activationFunctionOutput) throws Exception {
 		
 		inputCount = unprocessedProblemSet.get(0).length - outputCount;
 		
@@ -131,7 +133,14 @@ public class DataPreparator {
 		//printValueArray(scaledInputs);
 		
 		//Alter range of outputs	
-		output = alterRange(output, 0.0, 1.0);
+		
+		if (activationFunctionOutput instanceof Sigmoid) {
+			output = alterRange(output, 0.0, 1.0);
+		}
+		else {
+			//output = output;
+		}
+		
 		
 		splitDataSet(outputCount);
 		return inputCount;

@@ -72,10 +72,12 @@ public class Layer {
 		this.inputCount = inputCount;
 	}
 	
+	//Calculate Signal Error For Output Layers
 	public double calculateSignalError(double target, double nOutput) {
 		return -(target - nOutput) * activationFunction.calculateDirivative(nOutput);
 	}
 	
+	//Calculate Signal Error For Hidden Layers
 	public double calculateSignalError(double n2SignalError, double n1Output, double n2Weight) {
 		return n2SignalError * n2Weight * activationFunction.calculateDirivative(n1Output);
 	}
