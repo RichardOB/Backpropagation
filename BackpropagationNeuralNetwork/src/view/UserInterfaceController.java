@@ -20,6 +20,7 @@ import javafx.stage.Stage;
 import neuralnetwork.NetworkSettings;
 import neuralnetwork.NeuralNetwork;
 import utilities.DataPreparator;
+import utilities.FileIO;
 
 /**
  *
@@ -119,6 +120,8 @@ public class UserInterfaceController implements Initializable {
 		
 		neuralNetwork.setupTraining(dataPrep.getTrainingSet(), dataPrep.getGeneralisationSet());
 		neuralNetwork.train();
+		
+		FileIO.writeNetworkReports(neuralNetwork.weights, neuralNetwork.errorsOverEpoch, settings.toString());
 		System.out.println("Done!");
 	}
 	

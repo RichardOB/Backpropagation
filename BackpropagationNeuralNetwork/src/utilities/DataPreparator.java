@@ -38,25 +38,7 @@ public class DataPreparator {
 	private int inputCount;
 	
 	public void readProblemSetFromFile(String path) throws FileNotFoundException, IOException, Exception {
-		File file = new File(path);
-		
-		unprocessedProblemSet = new ArrayList<>();
-		
-		try (BufferedReader br = new BufferedReader(new FileReader(file))) {
-			String line;
-			while ((line = br.readLine()) != null) {
-				
-				String[] split = line.split("\\s+");
-				
-				Double[] convertedLine = new Double[split.length];
-				
-				for (int i = 0; i < split.length; i++) {
-					convertedLine[i] = Double.parseDouble(split[i]);
-				}
-				
-				unprocessedProblemSet.add(convertedLine);
-			}
-		}
+		unprocessedProblemSet = FileIO.readProblemSetFromFile(path);
 		
 		verifyDataCompleteness();
 		

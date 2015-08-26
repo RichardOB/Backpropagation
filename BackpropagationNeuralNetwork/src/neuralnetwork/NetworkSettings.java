@@ -96,4 +96,20 @@ public class NetworkSettings {
 	public void setFailureThreshold(double failureThreshold) {
 		this.failureThreshold = failureThreshold;
 	}
+	
+	@Override
+	public String toString() {
+		String settings = "";
+		
+		settings += "Momentum: " + this.momentum;
+		settings += "\nLearning Rate: " + this.learningRate;
+		settings += "\nFailure Threshold: " + this.failureThreshold;
+		settings += "\n";
+		settings += "\nEpoch Count: " + this.epochCount;
+		settings += "\nInput Neuron Count: " + this.inputNeuronCount;
+		settings += "\nOutput Neuron Count: " + this.outputNeuronCount;
+		settings += "\nHidden Neuron Count: " + this.hiddenNeuronCount;
+		
+		return settings;
+	}
 }

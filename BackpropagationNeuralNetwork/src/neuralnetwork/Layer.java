@@ -6,6 +6,8 @@
 package neuralnetwork;
 
 import activation.ActivationFunction;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  *
@@ -54,6 +56,17 @@ public class Layer {
 		}
 		
 		return result;
+	}
+	
+	public List getWeights() {
+		
+		List layerWeights = new ArrayList();
+
+		for(Neuron n: this.neurons) {
+			layerWeights.add(n.getWeights());
+		}
+		
+		return layerWeights;
 	}
 
 	public int getNeuronCount() {

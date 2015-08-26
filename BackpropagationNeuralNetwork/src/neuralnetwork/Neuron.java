@@ -5,6 +5,9 @@
  */
 package neuralnetwork;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Random;
 
 /**
@@ -105,4 +108,14 @@ public class Neuron {
 		this.signalError = signalError;
 	}
 	
+	public List<Double> getWeights() {
+		
+		List<Double> neuronWeights = new ArrayList<>();
+		
+		for (int i = 0; i < weights.length; i++) {
+			neuronWeights.add(weights[i]);
+		}
+		
+		return neuronWeights;
+	}
 }

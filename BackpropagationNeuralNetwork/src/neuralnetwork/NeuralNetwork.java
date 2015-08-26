@@ -8,6 +8,8 @@ package neuralnetwork;
 import dataSet.GeneralisationSet;
 import dataSet.TrainingSet;
 import activation.ActivationFunction;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  *
@@ -27,6 +29,11 @@ public class NeuralNetwork {
 	Layer hiddenLayer;
 	
 	Layer outputLayer;
+	
+	//Reports
+	
+	public String errorsOverEpoch = "";
+	public String weights = "";
 
 	public NeuralNetwork(NetworkSettings settings, ActivationFunction activationFunctionHidden, ActivationFunction activationFunctionOutput) {
 		this.settings = settings;
@@ -51,19 +58,24 @@ public class NeuralNetwork {
 		//TODO: Or end when average generalisation acccuracy within threshold
 		while (epochNumber++ < this.settings.getEpochCount()) {
 			
-			System.out.println("epoch: " + epochNumber);
+			errorsOverEpoch += "\nepoch: " + epochNumber;
+			weights += "\nepoch: " + epochNumber;
+			//System.out.println("epoch: " + epochNumber);
 			
 			//1. Train
 			double trainingAccuracy = startTrainingPhase();
 			boolean better = prevTrainingErr >= trainingAccuracy;
-			System.out.println("Training Error Difference: " + better);
+			errorsOverEpoch += "\nTraining Error Improvement: " + better;
+			//System.out.println("Training Error Difference: " + better);
+			weights += getWeightListAsString();
 			
 			prevTrainingErr = trainingAccuracy;
 			
 			//2. Test
 			double generalisationAccuracy = startTestingPhase();
 			better = prevGeneralisationErr >= generalisationAccuracy;
-			System.out.println("Generalisation Error Better: " + better);
+			errorsOverEpoch += "\nGeneralisation Error Improvement: " + better;
+			//System.out.println("Generalisation Error Better: " + better);
 			
 			prevGeneralisationErr = generalisationAccuracy;
 			
@@ -110,8 +122,9 @@ public class NeuralNetwork {
 		}
 		
 		errorAccumulator = errorAccumulator/this.trainingSet.getTrainingPatternCount();
-		//System.out.println("Training Accuracy: " + accuracy/this.trainingSet.getTrainingPatternCount() * 100.0);
-		System.out.println("Training Average Error: " + errorAccumulator);
+		errorsOverEpoch += "\nTraining Average Error: " + errorAccumulator;
+		
+		//System.out.println("Training Average Error: " + errorAccumulator);
 		
 		//Calculate training accuracy (MSE) of epoch
 		return errorAccumulator;
@@ -137,8 +150,9 @@ public class NeuralNetwork {
 		}
 		
 		errorAccumulator = errorAccumulator/this.generalisationSet.getGeneralisationPatternCount();
-		//System.out.println("Generalisation Accuracy: " + accuracy/this.generalisationSet.getGeneralisationPatternCount() * 100.0);
-		System.out.println("Generalisation Average Error: " + errorAccumulator);
+		
+		errorsOverEpoch += "\nGeneralisation Average Error: " + errorAccumulator;
+		//System.out.println("Generalisation Average Error: " + errorAccumulator);
 		
 		//Calculate generalisation accuracy of epoch
 		return errorAccumulator;
@@ -287,6 +301,27 @@ public class NeuralNetwork {
 		}
 		
 		return 0;
+	}
+	
+	public List getWeights() {
+		
+		List result = new ArrayList();
+		
+		result.add("Hidden Layer: " + this.hiddenLayer.getWeights());
+		result.add("Output Layer: " + this.outputLayer.getWeights());
+		
+		return result;
+	}
+	
+	public String getWeightListAsString() {
+		List networkWeights = getWeights();
+		String result = "";
+		
+		for (Object weight : networkWeights) {
+			result += "\n" + weight.toString();
+		}
+		
+		return result + "\n";
 	}
 	
 }
