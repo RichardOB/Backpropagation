@@ -9,6 +9,7 @@ import dataSet.GeneralisationSet;
 import dataSet.TrainingSet;
 import activation.ActivationFunction;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -34,6 +35,7 @@ public class NeuralNetwork {
 	
 	public String errorsOverEpoch = "";
 	public String weights = "";
+	public String inputOutput = "";
 
 	public NeuralNetwork(NetworkSettings settings, ActivationFunction activationFunctionHidden, ActivationFunction activationFunctionOutput) {
 		this.settings = settings;
@@ -60,6 +62,7 @@ public class NeuralNetwork {
 			
 			errorsOverEpoch += "\nepoch: " + epochNumber;
 			weights += "\nepoch: " + epochNumber;
+			inputOutput += "\nepoch: " + epochNumber;
 			//System.out.println("epoch: " + epochNumber);
 			
 			//1. Train
@@ -96,11 +99,14 @@ public class NeuralNetwork {
 		double accuracy = 0;
 		double errorAccumulator = 0;
 		//System.out.println("\nTRAINING:");
+		inputOutput += "\n\tTraining: ";
 		
 		for (int i = 0; i < this.trainingSet.getTrainingPatternCount(); i++) {
 			
 			//1. Feed inputs through network 
 			feedForward(this.trainingSet.input[i]);
+			inputOutput += "\n\t\t" + getResultVectorString(this.trainingSet.input[i]);
+			
 			
 			//2. Get previously calculated outputs from network
 			double[] actual = outputLayer.getOutputs();
@@ -135,10 +141,12 @@ public class NeuralNetwork {
 		double accuracy = 0;
 		double errorAccumulator = 0;
 		//System.out.println("\nTESTING:");
+		inputOutput += "\n\tTesting: ";
 		
 		for (int i = 0; i < this.generalisationSet.getGeneralisationPatternCount(); i++) {
 			
 			double[] actual = getOutput(this.generalisationSet.input[i]);
+			inputOutput += "\n\t\t" + getResultVectorString(this.generalisationSet.input[i]);
 			
 			double error = calculatePatternError(this.generalisationSet.expectedOutput[i], actual);
 			errorAccumulator += error;
@@ -156,6 +164,29 @@ public class NeuralNetwork {
 		
 		//Calculate generalisation accuracy of epoch
 		return errorAccumulator;
+	}
+	
+	public double[][] useTrainedNetwork(TrainingSet fullDataSet) throws Exception {
+		String dataSet = "";
+		
+		List<double[]> data = new ArrayList<double[]>();
+		
+		for (int i = 0; i < fullDataSet.getTrainingPatternCount(); i++) {
+			
+			double[] actual = getOutput(fullDataSet.input[i]);
+			data.add(getResultVectorDoubleArray(fullDataSet.input[i]));
+		}
+		
+		double[][] result = new double[data.size()][data.get(1).length];
+		
+		for (int i = 0; i < result.length; i++) {
+			double[] vect = data.get(i);
+			for (int j = 0; j < result[i].length; j++) {
+				result[i][j] = vect[j];
+			}
+		}
+		
+		return result;
 	}
 	
 	public void calculateSignalErrors(double[] targetOutput) throws Exception {
@@ -322,6 +353,41 @@ public class NeuralNetwork {
 		}
 		
 		return result + "\n";
+	}
+	
+	public String getResultVectorString(double[] input) throws Exception {
+		
+		String result = "";
+		
+		result += Arrays.toString(input) + " ";
+		
+		//result += "; ";
+		
+		Neuron[] output = outputLayer.neurons;
+		for (Neuron output1 : output) {
+			result += output1.getOutput() + " ";
+		}
+		
+		return result;
+	}
+	
+	public double[] getResultVectorDoubleArray(double[] input) throws Exception {
+		
+		Neuron[] output = outputLayer.neurons;
+		
+		double[] outputArray = new double[output.length + input.length];
+		
+		for (int i = 0; i < input.length; i++) {
+			outputArray[i] = input[i];
+		}
+		
+		int count = input.length;
+		for (Neuron output1 : output) {
+			outputArray[count] = output1.getOutput();
+			count++;
+		}
+		
+		return outputArray;
 	}
 	
 }

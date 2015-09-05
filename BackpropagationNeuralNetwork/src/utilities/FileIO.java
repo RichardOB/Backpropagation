@@ -45,14 +45,17 @@ public class FileIO {
 		return unprocessedProblemSet;
 	}
 	
-	public static void writeNetworkReports(String weights, String errorsOverEpoch, String networkSettings) {
+	public static void writeNetworkReports(String weights, String errorsOverEpoch, String networkSettings, String resultVector, String finalData) {
 		
 		java.util.Date date= new java.util.Date();
 		String timestamp = "" + date;
 		writeToFile(weights, "reports/" + timestamp + "/weights.txt");
 		writeToFile(errorsOverEpoch, "reports/" + timestamp + "/errorsOverEpoch.txt");
 		writeToFile(networkSettings, "reports/" + timestamp + "/networkSettings.txt");
+		writeToFile(resultVector, "reports/" + timestamp + "/resultVector.txt");
+		writeToFile(finalData, "reports/" + timestamp + "/finalData.txt");
 	}
+	
 	
 	private static void writeToFile(String content, String path) {
 		try {

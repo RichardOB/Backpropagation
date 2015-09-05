@@ -121,7 +121,10 @@ public class UserInterfaceController implements Initializable {
 		neuralNetwork.setupTraining(dataPrep.getTrainingSet(), dataPrep.getGeneralisationSet());
 		neuralNetwork.train();
 		
-		FileIO.writeNetworkReports(neuralNetwork.weights, neuralNetwork.errorsOverEpoch, settings.toString());
+		double[][] dataSet = neuralNetwork.useTrainedNetwork(dataPrep.getFullDataSet());
+		String dataSetString = dataPrep.convertAndAlterDataSet(dataSet, 26.2144, -26.2144);
+		
+		FileIO.writeNetworkReports(neuralNetwork.weights, neuralNetwork.errorsOverEpoch, "Data Set " + file.getPath() + "\n\n" + settings.toString(), neuralNetwork.inputOutput, dataSetString);
 		System.out.println("Done!");
 	}
 	
