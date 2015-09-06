@@ -39,9 +39,6 @@ public class UserInterfaceController implements Initializable {
 	private TextField momentum;
 	
 	@FXML 
-	private TextField trailCount;
-	
-	@FXML 
 	private TextField hiddenNeuronCount;
 	
 	@FXML 

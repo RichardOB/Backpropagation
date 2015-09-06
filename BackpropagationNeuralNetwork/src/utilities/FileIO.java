@@ -55,8 +55,7 @@ public class FileIO {
 		writeToFile(resultVector, "reports/" + timestamp + "/resultVector.txt");
 		writeToFile(finalData, "reports/" + timestamp + "/finalData.txt");
 	}
-	
-	
+
 	private static void writeToFile(String content, String path) {
 		try {
 			

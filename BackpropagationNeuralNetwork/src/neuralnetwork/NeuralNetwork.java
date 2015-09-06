@@ -32,7 +32,6 @@ public class NeuralNetwork {
 	Layer outputLayer;
 	
 	//Reports
-	
 	public String errorsOverEpoch = "";
 	public String weights = "";
 	public String inputOutput = "";
@@ -60,51 +59,47 @@ public class NeuralNetwork {
 		//TODO: Or end when average generalisation acccuracy within threshold
 		while (epochNumber++ < this.settings.getEpochCount()) {
 			
+			//Record Current Epoch Number 
 			errorsOverEpoch += "\nepoch: " + epochNumber;
 			weights += "\nepoch: " + epochNumber;
 			inputOutput += "\nepoch: " + epochNumber;
-			//System.out.println("epoch: " + epochNumber);
-			
+
 			//1. Train
+			//Start Training Phase for next epoch
 			double trainingAccuracy = startTrainingPhase();
+			//Record if epoch is better than previous
 			boolean better = prevTrainingErr >= trainingAccuracy;
 			errorsOverEpoch += "\nTraining Error Improvement: " + better;
-			//System.out.println("Training Error Difference: " + better);
+			//Record weights after current epoch
 			weights += getWeightListAsString();
 			
+			//Capture training error for next epoch
 			prevTrainingErr = trainingAccuracy;
 			
 			//2. Test
+			//Start Testing Phase for next epoch
 			double generalisationAccuracy = startTestingPhase();
+			//Record if epoch is better than previous
 			better = prevGeneralisationErr >= generalisationAccuracy;
 			errorsOverEpoch += "\nGeneralisation Error Improvement: " + better;
-			//System.out.println("Generalisation Error Better: " + better);
 			
+			//Capture generalisation error for next epoch
 			prevGeneralisationErr = generalisationAccuracy;
-			
-			//3. Add to training and generalisation totals
-			this.trainingSet.addToTotal(trainingAccuracy);
-			this.generalisationSet.addToTotal(generalisationAccuracy);
-			
-			//4. add training/generalisation results to training result file
-			//TODO
 		}
-		
-		//System.out.println("Training Accuracy: " + trainingSet.getTrainingAccuracyAverage(epochNumber));
-		//System.out.println("Generalisation Accuracy: " + generalisationSet.getGeneralisationAccuracyAverage(epochNumber));
 	}
 	
 	private double startTrainingPhase() throws Exception {
 		
-		double accuracy = 0;
 		double errorAccumulator = 0;
-		//System.out.println("\nTRAINING:");
+
 		inputOutput += "\n\tTraining: ";
 		
+		//Loop through entire training set
 		for (int i = 0; i < this.trainingSet.getTrainingPatternCount(); i++) {
 			
 			//1. Feed inputs through network 
 			feedForward(this.trainingSet.input[i]);
+			//Capture result vector string
 			inputOutput += "\n\t\t" + getResultVectorString(this.trainingSet.input[i]);
 			
 			
@@ -114,12 +109,7 @@ public class NeuralNetwork {
 			//3. Calculate neural network error
 			double error = calculatePatternError(this.trainingSet.expectedOutput[i], actual);
 			errorAccumulator += error;
-			
-			//System.out.println(error);
-			
-			//4. Determine if prediction was correct
-			accuracy += determinePredictionCorrectness(error);
-			
+					
 			//5. Calculate Signal Errors
 			calculateSignalErrors(this.trainingSet.expectedOutput[i]);
 			
@@ -129,8 +119,8 @@ public class NeuralNetwork {
 		
 		errorAccumulator = errorAccumulator/this.trainingSet.getTrainingPatternCount();
 		errorsOverEpoch += "\nTraining Average Error: " + errorAccumulator;
-		
-		//System.out.println("Training Average Error: " + errorAccumulator);
+
+		//TODO: Shuffle dataset
 		
 		//Calculate training accuracy (MSE) of epoch
 		return errorAccumulator;
@@ -138,58 +128,56 @@ public class NeuralNetwork {
 	
 	private double startTestingPhase() throws Exception {
 		
-		double accuracy = 0;
 		double errorAccumulator = 0;
-		//System.out.println("\nTESTING:");
+
 		inputOutput += "\n\tTesting: ";
 		
+		//Loop through entire generalisation set
 		for (int i = 0; i < this.generalisationSet.getGeneralisationPatternCount(); i++) {
 			
+			//Get previously calculated outputs from network
 			double[] actual = getOutput(this.generalisationSet.input[i]);
+			//Capture result vector string
 			inputOutput += "\n\t\t" + getResultVectorString(this.generalisationSet.input[i]);
 			
+			//3. Calculate neural network error
 			double error = calculatePatternError(this.generalisationSet.expectedOutput[i], actual);
 			errorAccumulator += error;
-			
-			//System.out.println(error);
-			
-			//Determine if prediction was correct
-			accuracy += determinePredictionCorrectness(error);
 		}
 		
 		errorAccumulator = errorAccumulator/this.generalisationSet.getGeneralisationPatternCount();
 		
 		errorsOverEpoch += "\nGeneralisation Average Error: " + errorAccumulator;
-		//System.out.println("Generalisation Average Error: " + errorAccumulator);
+		
+		//TODO: Shuffle dataset
 		
 		//Calculate generalisation accuracy of epoch
 		return errorAccumulator;
 	}
 	
 	public double[][] useTrainedNetwork(TrainingSet fullDataSet) throws Exception {
-		String dataSet = "";
 		
-		List<double[]> data = new ArrayList<double[]>();
+		List<double[]> data = new ArrayList<>();
 		
+		//Loop through entire dataset
 		for (int i = 0; i < fullDataSet.getTrainingPatternCount(); i++) {
 			
-			double[] actual = getOutput(fullDataSet.input[i]);
+			//Get input/outputs from Neural Network and add to result
 			data.add(getResultVectorDoubleArray(fullDataSet.input[i]));
 		}
 		
+		//Convert array list to double[][]
 		double[][] result = new double[data.size()][data.get(1).length];
 		
 		for (int i = 0; i < result.length; i++) {
 			double[] vect = data.get(i);
-			for (int j = 0; j < result[i].length; j++) {
-				result[i][j] = vect[j];
-			}
+			System.arraycopy(vect, 0, result[i], 0, result[i].length);
 		}
 		
 		return result;
 	}
 	
-	public void calculateSignalErrors(double[] targetOutput) throws Exception {
+	private void calculateSignalErrors(double[] targetOutput) throws Exception {
 		
 		//Calculate signal error for each output
 		for (int i = 0; i < this.settings.getOutputNeuronCount(); i++) {
@@ -199,8 +187,6 @@ public class NeuralNetwork {
 			double nOutput = n.getOutput();
 			
 			//TODO: Experiment with negative sign (Not sure why it was there)
-			//n.setSignalError(-(targetOutput[i] - nOutput) * (1 - nOutput) * nOutput);
-			//n.setSignalError(-(targetOutput[i] - nOutput) * (1 - nOutput) * nOutput);
 			n.setSignalError(outputLayer.calculateSignalError(targetOutput[i], nOutput));
 		}
 		
@@ -226,7 +212,7 @@ public class NeuralNetwork {
 		}
 	}
 	
-	public void backPropagate(double[] input) throws Exception {
+	private void backPropagate(double[] input) throws Exception {
 		
 		//Calculate the new weight values for the hidden-to-output weights
 		for (int i = 0; i < this.settings.getOutputNeuronCount(); i++) {
@@ -288,7 +274,7 @@ public class NeuralNetwork {
 		}
 	}
 	
-	public double[] getOutput(double[] inputs) throws Exception {
+	private double[] getOutput(double[] inputs) throws Exception {
 
 		this.hiddenLayer.feedForward(inputs);
 
@@ -305,33 +291,19 @@ public class NeuralNetwork {
 	}
 	
 	private double calculatePatternError(double[] expectedOutput, double[] actualOutput) throws Exception {
-		//TODO: Calculate signal error
 		
 		if (expectedOutput.length != actualOutput.length) {
 			throw new Exception("Output length (" + actualOutput.length + ") does not match expected output length (" + expectedOutput.length + ")");
 		}
 		
 		double error = 0.0;
-		
-		//System.out.println("expected : actual : error");
+
+		//TODO: Is this correct way of calculating patternn error?
 		for (int i = 0; i < actualOutput.length; i++) {
 			error += Math.pow((expectedOutput[i] - actualOutput[i]),2);
-			//System.out.println(expectedOutput[i] + " : " + actualOutput[i] + " : " + Math.abs( Math.abs(expectedOutput[i]) - Math.abs(actualOutput[i])));
 		}
-		
-		//WHY ARE WE DOING THIS????
-		//error = error/actualOutput.length;
 		
 		return error;
-	}
-	
-	private int determinePredictionCorrectness(double error) {
-		
-		if (error <= settings.getFailureThreshold()) {
-			return 1;
-		}
-		
-		return 0;
 	}
 	
 	public List getWeights() {
@@ -360,8 +332,6 @@ public class NeuralNetwork {
 		String result = "";
 		
 		result += Arrays.toString(input) + " ";
-		
-		//result += "; ";
 		
 		Neuron[] output = outputLayer.neurons;
 		for (Neuron output1 : output) {

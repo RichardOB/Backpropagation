@@ -9,14 +9,8 @@ import activation.ActivationFunction;
 import activation.Sigmoid;
 import dataSet.GeneralisationSet;
 import dataSet.TrainingSet;
-import java.io.BufferedReader;
-import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.FileReader;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Comparator;
 import java.util.List;
 
 /**
@@ -43,41 +37,8 @@ public class DataPreparator {
 		unprocessedProblemSet = FileIO.readProblemSetFromFile(path);
 		
 		verifyDataCompleteness();
-		
-		//printFile(unprocessedProblemSet);
 	}
-	
-	private void printFile(List<Double[]> input) {
-		
-		input.stream().map((line) -> {
-			for (int j = 0; j < line.length; j++) {
-				
-				System.out.print(line[j]);
-				
-				if (j != line.length - 1) {
-					System.out.print(",");
-				}
-			}
-			return line;
-		}).forEach((_item) -> {
-			System.out.println("");
-		});
-	}
-	
-	private void printValueArray (double[][] arr) {
-		
-		for (double[] arr1 : arr) {
-			for (int j = 0; j < arr1.length; j++) {
-				System.out.print(arr1[j]);
-				
-				if (j != arr1.length - 1) {
-					System.out.print(",");
-				}
-			}
-			System.out.println("");
-		}
-	}
-		
+
 	public int preprocessData(int outputCount, ActivationFunction activationFunctionHidden, ActivationFunction activationFunctionOutput) throws Exception {
 		
 		inputCount = unprocessedProblemSet.get(0).length - outputCount;
@@ -114,10 +75,9 @@ public class DataPreparator {
 		//Alter range of inputs
 		input = alterRange(input, -Math.sqrt(3.0), Math.sqrt(3.0));
 		
-		//printValueArray(scaledInputs);
-		
 		//Alter range of outputs	
-		
+		//TODO: Confirm output for linear should still be between 0 and 1
+		//TODO: Experiment with ranges: E.g. 0.1 -. 0.9 (Outer bounds unreachable)
 		if (activationFunctionOutput instanceof Sigmoid) {
 			output = alterRange(output, 0.0, 1.0);
 		}
@@ -125,8 +85,7 @@ public class DataPreparator {
 			//output = output;
 			output = alterRange(output, 0.0, 1.0);
 		}
-		
-		
+
 		splitDataSet(outputCount);
 		return inputCount;
 	}
@@ -187,7 +146,6 @@ public class DataPreparator {
 
 		int trainingDataCount = (int) Math.ceil(unprocessedProblemSet.size() * 0.8);
 		int generalisationDataCount = (int) Math.floor(unprocessedProblemSet.size() * 0.2);
-		int fullDataCount = unprocessedProblemSet.size();
 		
 		double[][] trainingDataInput = new double[trainingDataCount][inputCount];
 		double[][] trainingDataOutput = new double[trainingDataCount][outputCount];
@@ -211,18 +169,8 @@ public class DataPreparator {
 		//Add data to generalisation set
 		this.generalisationSet = new GeneralisationSet(generalisationDataInput, generalisationDataOutput);
 		
-		// Now compile entire ste for later 
-//		double[][] fullDataInput = new double[fullDataCount][inputCount];
-//		double[][] fullDataOutput = new double[fullDataCount][outputCount];
-//		
-//		//Copy first 80% of input data to trainingDataInput
-//		System.arraycopy(input, 0, fullDataInput, 0, fullDataCount);
-//		//Copy first 80% of output data to trainingDataOutput
-//		System.arraycopy(output, 0, fullDataOutput, 0, fullDataCount);
-		
 		//Add data to full set
 		this.fullDataSet = new TrainingSet(input, output);
-		
 		
 		return inputCount;
 	}

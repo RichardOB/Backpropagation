@@ -16,8 +16,6 @@ public class GeneralisationSet {
 	public double[][] expectedOutput;
 	
 	int generalisationPatternCount;
-	
-	double generalisationAccuracyTotal = 0.0;
 
 	public GeneralisationSet(double[][] input, double[][] expectedOutput) {
 		this.input = input;
@@ -49,22 +47,6 @@ public class GeneralisationSet {
 		this.generalisationPatternCount = generalisationPatternCount;
 	}
 
-	public double getgeneralisationAccuracyTotal() {
-		return generalisationAccuracyTotal;
-	}
-
-	public void setgeneralisationAccuracyTotal(double generalisationAccuracyTotal) {
-		this.generalisationAccuracyTotal = generalisationAccuracyTotal;
-	}
-	
-	public double getGeneralisationAccuracyAverage(int epochs) {
-		return this.generalisationAccuracyTotal / epochs;
-	}
-	
-	public void addToTotal(double increment){
-		this.generalisationAccuracyTotal += increment;
-	}
-	
 	public void print() {
 		System.out.println("Generalisation Set:\n");
 		for (int i = 0; i < generalisationPatternCount; i++) {
