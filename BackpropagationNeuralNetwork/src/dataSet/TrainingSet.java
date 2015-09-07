@@ -5,6 +5,9 @@
  */
 package dataSet;
 
+import java.util.Random;
+import utilities.ArrayUtilities;
+
 /**
  *
  * @author Richard O'Brien
@@ -32,7 +35,6 @@ public class TrainingSet {
 	}
 	
 	public void print() {
-		System.out.println("Training Set:\n");
 		for (int i = 0; i < trainingPatternCount; i++) {
 			
 			for (int j = 0; j < input[i].length; j++) {
@@ -47,5 +49,10 @@ public class TrainingSet {
 			
 			System.out.println("");
 		}
+	}
+	
+	public void shuffleArray() throws Exception
+	{
+		ArrayUtilities.shuffleDataSet(input, expectedOutput);
 	}
 }

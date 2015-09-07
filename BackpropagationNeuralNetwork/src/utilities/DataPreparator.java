@@ -79,11 +79,11 @@ public class DataPreparator {
 		//TODO: Confirm output for linear should still be between 0 and 1
 		//TODO: Experiment with ranges: E.g. 0.1 -. 0.9 (Outer bounds unreachable)
 		if (activationFunctionOutput instanceof Sigmoid) {
-			output = alterRange(output, 0.0, 1.0);
+			output = alterRange(output, 0.1, 0.9);
 		}
 		else {
 			//output = output;
-			output = alterRange(output, 0.0, 1.0);
+			output = alterRange(output, 0.1, 0.9);
 		}
 
 		splitDataSet(outputCount);
@@ -112,7 +112,7 @@ public class DataPreparator {
 	
 	private double[][] alterRange(double[][] unsortedData, double tsMin, double tsMax) {
 
-		double[][] sortedData = DeepCopy.deepCopy(unsortedData);
+		double[][] sortedData = ArrayUtilities.deepCopy(unsortedData);
 			
 		//For all inputs
 		for (int col = 0; col < sortedData[0].length; col ++) {

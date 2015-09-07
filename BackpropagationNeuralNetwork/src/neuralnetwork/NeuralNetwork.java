@@ -121,6 +121,7 @@ public class NeuralNetwork {
 		errorsOverEpoch += "\nTraining Average Error: " + errorAccumulator;
 
 		//TODO: Shuffle dataset
+		this.trainingSet.shuffleArray();
 		
 		//Calculate training accuracy (MSE) of epoch
 		return errorAccumulator;
@@ -150,6 +151,7 @@ public class NeuralNetwork {
 		errorsOverEpoch += "\nGeneralisation Average Error: " + errorAccumulator;
 		
 		//TODO: Shuffle dataset
+		this.generalisationSet.shuffleArray();
 		
 		//Calculate generalisation accuracy of epoch
 		return errorAccumulator;

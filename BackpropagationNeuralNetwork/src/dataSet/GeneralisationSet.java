@@ -5,6 +5,8 @@
  */
 package dataSet;
 
+import utilities.ArrayUtilities;
+
 /**
  *
  * @author Richard O'Brien
@@ -63,5 +65,10 @@ public class GeneralisationSet {
 			
 			System.out.println("");
 		}
+	}
+	
+	public void shuffleArray() throws Exception
+	{
+		ArrayUtilities.shuffleDataSet(input, expectedOutput);
 	}
 }
