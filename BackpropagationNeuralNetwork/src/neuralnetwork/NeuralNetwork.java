@@ -33,6 +33,7 @@ public class NeuralNetwork {
 	
 	//Reports
 	public String errorsOverEpoch = "";
+	public String trainGenErrorPlot = "";
 	public String weights = "";
 	public String inputOutput = "";
 
@@ -56,6 +57,8 @@ public class NeuralNetwork {
 		double prevTrainingErr = 0.0;
 		double prevGeneralisationErr = 0.0;
 		
+		trainGenErrorPlot += "training_error,generalisation_error";
+		
 		//TODO: Or end when average generalisation acccuracy within threshold
 		while (epochNumber++ < this.settings.getEpochCount()) {
 			
@@ -63,10 +66,14 @@ public class NeuralNetwork {
 			errorsOverEpoch += "\nepoch: " + epochNumber;
 			weights += "\nepoch: " + epochNumber;
 			inputOutput += "\nepoch: " + epochNumber;
+			trainGenErrorPlot += "\n";
 
 			//1. Train
 			//Start Training Phase for next epoch
 			double trainingAccuracy = startTrainingPhase();
+			
+			trainGenErrorPlot += trainingAccuracy + ",";
+			
 			//Record if epoch is better than previous
 			boolean better = prevTrainingErr >= trainingAccuracy;
 			errorsOverEpoch += "\nTraining Error Improvement: " + better;
@@ -79,6 +86,9 @@ public class NeuralNetwork {
 			//2. Test
 			//Start Testing Phase for next epoch
 			double generalisationAccuracy = startTestingPhase();
+			
+			trainGenErrorPlot += generalisationAccuracy;
+			
 			//Record if epoch is better than previous
 			better = prevGeneralisationErr >= generalisationAccuracy;
 			errorsOverEpoch += "\nGeneralisation Error Improvement: " + better;
@@ -165,7 +175,16 @@ public class NeuralNetwork {
 		for (int i = 0; i < fullDataSet.getTrainingPatternCount(); i++) {
 			
 			//Get input/outputs from Neural Network and add to result
-			data.add(getResultVectorDoubleArray(fullDataSet.input[i]));
+			getOutput(fullDataSet.input[i]);
+			
+			double[] temp = getResultVectorDoubleArray(fullDataSet.input[i]);
+			
+			for (int j = 0; j < temp.length; j++) {
+				System.out.print(temp[j] + " ");
+			}
+			System.out.println("");
+			
+			data.add(temp);
 		}
 		
 		//Convert array list to double[][]
@@ -174,6 +193,14 @@ public class NeuralNetwork {
 		for (int i = 0; i < result.length; i++) {
 			double[] vect = data.get(i);
 			System.arraycopy(vect, 0, result[i], 0, result[i].length);
+		}
+		
+		System.out.println("After");
+		for (int i = 0; i < result.length; i++) {
+			for (int j = 0; j < result[i].length; j++) {
+				System.out.print(result[i][j] + " ");
+			}
+			System.out.println("");
 		}
 		
 		return result;

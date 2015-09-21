@@ -33,6 +33,9 @@ public class DataPreparator {
 	
 	private int inputCount;
 	
+	private double [][] inputMinMax;
+	private double [][] outputMinMax;
+	
 	public void readProblemSetFromFile(String path) throws FileNotFoundException, IOException, Exception {
 		unprocessedProblemSet = FileIO.readProblemSetFromFile(path);
 		
@@ -45,8 +48,6 @@ public class DataPreparator {
 		
 		input = new double[unprocessedProblemSet.size()][inputCount];
 		output = new double[unprocessedProblemSet.size()][outputCount];
-		
-		//Shuffle data
 		
 		//Split Data into input and output sets
 		for (int i = 0; i < unprocessedProblemSet.size(); i++) {
@@ -73,44 +74,119 @@ public class DataPreparator {
 		}
 
 		//Alter range of inputs
-		input = alterRange(input, -Math.sqrt(3.0), Math.sqrt(3.0));
-		
+		inputMinMax = findMinMax(input);
+		input = alterRange(input, -Math.sqrt(3.0), Math.sqrt(3.0), inputMinMax);
+
 		//Alter range of outputs	
 		//TODO: Confirm output for linear should still be between 0 and 1
 		//TODO: Experiment with ranges: E.g. 0.1 -. 0.9 (Outer bounds unreachable)
 		if (activationFunctionOutput instanceof Sigmoid) {
-			output = alterRange(output, 0.1, 0.9);
+			outputMinMax = findMinMax(output);
+			output = alterRange(output, 0.1, 0.9, outputMinMax);
 		}
 		else {
 			//output = output;
-			output = alterRange(output, 0.1, 0.9);
+			outputMinMax = findMinMax(output);
+			//output = alterRange(output, 0.1, 0.9, outputMinMax);
+			output = alterRange(output, -0.9, 0.9, outputMinMax);
 		}
 
 		splitDataSet(outputCount);
 		return inputCount;
 	}
 	
-	public String convertAndAlterDataSet(double[][] dataSet, double tsMin, double tsMax) {
+	public String convertAndAlterDataSet(double[][] dataSet, int outputCount) throws Exception {
+
+//		for (int i = 0; i < dataSet.length; i++) {
+//			for (int j = 0; j < dataSet[i].length; j++) {
+//				System.out.print(dataSet[i][j] + " ");
+//			}
+//			System.out.println("");
+//		}
 		
-		double[][] result = alterRange(dataSet, tsMin, tsMax);
+		double [][] convertedInput = new double[dataSet.length][inputCount];
+		double [][] convertedOutput = new double[dataSet.length][outputCount];
 		
+		//Split Data into input and output sets
+		for (int i = 0; i < dataSet.length; i++) {
+			
+			double[] problemInstance = dataSet[i];
+			
+			if (outputCount >= problemInstance.length) {
+				throw new Exception("output count is too large for data set");
+			}
+			
+			int count = 0;
+			
+			for (int j = 0; j < problemInstance.length; j++) {
+				if (j < inputCount) {
+					convertedInput[i][j] = problemInstance[j];
+				}
+				else if (j >= inputCount) {
+					convertedOutput[i][count++] = problemInstance[j];
+				}
+				else {
+					throw new Exception("input and output count have disointability issues");
+				}
+			}
+		}
+		
+		convertedInput = alterRange(convertedInput, inputMinMax);
+		convertedOutput = alterRange(convertedOutput, outputMinMax);
+		
+
 		String resultString = "";
 		
-		for (double[] arr1 : result) {
-			for (int j = 0; j < arr1.length; j++) {
-				resultString += arr1[j];
+		for (int i = 0; i < convertedInput.length; i++) {
+			
+			for (int j = 0; j < convertedInput[i].length; j++) {
+				resultString += convertedInput[i][j];
+				resultString += ",";
+			}
+			
+			for (int j = 0; j < convertedOutput[i].length; j++) {
+				resultString += convertedOutput[i][j];
 				
-				if (j != arr1.length - 1) {
+				if (j != convertedOutput[i].length - 1) {
 					resultString += ",";
 				}
 			}
+			
 			resultString += "\n";
 		}
-		
+
 		return resultString;
 	}
 	
-	private double[][] alterRange(double[][] unsortedData, double tsMin, double tsMax) {
+	private double[][] findMinMax(double[][] unsortedData) {
+		
+		double[][] sortedData = ArrayUtilities.deepCopy(unsortedData);
+		
+		double [][] minMax = new double [2][sortedData[0].length];
+			
+		//For all inputs
+		for (int col = 0; col < sortedData[0].length; col ++) {
+			
+			//bubble sort according to input
+			for (int i = 0; i < sortedData.length; i++) {
+				for (int j = i+1; j < sortedData.length; j++) {
+					if (sortedData[i][col]>sortedData[j][col]) {
+						double temp = sortedData[i][col];
+						sortedData[i][col] = sortedData[j][col];
+						sortedData[j][col] = temp;
+					}
+				}
+			}
+			
+			//range of unscaled values
+			minMax[0][col] = sortedData[0][col];
+			minMax[1][col] = sortedData[sortedData.length - 1][col];	
+		}
+		
+		return minMax;
+	}
+	
+	private double[][] alterRange(double[][] unsortedData, double [][] tsMinMax) {
 
 		double[][] sortedData = ArrayUtilities.deepCopy(unsortedData);
 			
@@ -128,9 +204,33 @@ public class DataPreparator {
 				}
 			}
 			
+			
 			//range of unscaled values
 			double tuMin = sortedData[0][col];
 			double tuMax = sortedData[sortedData.length - 1][col];
+			
+			
+			//calculate new scaled values of unsorted data
+			for (double[] unsortedInput : unsortedData) {
+				double tu = unsortedInput[col];
+				double ts = ((tu - tuMin)/(tuMax - tuMin)) * (tsMinMax[1][col] - tsMinMax[0][col]) + tsMinMax[0][col];
+				unsortedInput[col] = ts;
+			}
+        }
+		return unsortedData;
+	}
+	
+	private double[][] alterRange(double[][] unsortedData, double tsMin, double tsMax, double[][] oldMinMax) {
+
+		double[][] sortedData = ArrayUtilities.deepCopy(unsortedData);
+			
+		//For all inputs
+		for (int col = 0; col < sortedData[0].length; col ++) {
+			
+			
+			//range of unscaled values
+			double tuMin = oldMinMax[0][col];
+			double tuMax = oldMinMax[1][col];
 			
 			//calculate new scaled values of unsorted data
 			for (double[] unsortedInput : unsortedData) {
