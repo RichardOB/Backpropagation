@@ -11,7 +11,9 @@ import dataSet.GeneralisationSet;
 import dataSet.TrainingSet;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.util.Collections;
 import java.util.List;
+import java.util.Random;
 
 /**
  *
@@ -48,6 +50,9 @@ public class DataPreparator {
 		
 		input = new double[unprocessedProblemSet.size()][inputCount];
 		output = new double[unprocessedProblemSet.size()][outputCount];
+		
+		//Shuffle Data
+		//Collections.shuffle(unprocessedProblemSet, new Random());
 		
 		//Split Data into input and output sets
 		for (int i = 0; i < unprocessedProblemSet.size(); i++) {
@@ -103,6 +108,9 @@ public class DataPreparator {
 //			}
 //			System.out.println("");
 //		}
+		
+		printminMax(inputMinMax);
+		printminMax(outputMinMax);
 		
 		double [][] convertedInput = new double[dataSet.length][inputCount];
 		double [][] convertedOutput = new double[dataSet.length][outputCount];
@@ -310,4 +318,12 @@ public class DataPreparator {
 	public void setFullDataSet(TrainingSet fullDataSet) {
 		this.fullDataSet = fullDataSet;
 	}
+	
+	public void	printminMax(double[][] minMax) {
+		
+		for (int i = 0; i < minMax.length; i++) {
+			System.out.print(minMax[i][0] + " ");
+		}
+	}
+	
 }

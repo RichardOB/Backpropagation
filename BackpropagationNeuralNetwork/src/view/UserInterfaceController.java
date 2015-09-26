@@ -113,7 +113,8 @@ public class UserInterfaceController implements Initializable {
 		
 		
 		//NetworkSettings settings, ActivationFunction activationFunction
-		neuralNetwork = new NeuralNetwork(settings, new Sigmoid(), new Linear());
+		//neuralNetwork = new NeuralNetwork(settings, new Sigmoid(), new Linear());
+		neuralNetwork = new NeuralNetwork(settings, new HyperbolicTangent(), new Linear());
 		
 		neuralNetwork.setupTraining(dataPrep.getTrainingSet(), dataPrep.getGeneralisationSet());
 		neuralNetwork.train();

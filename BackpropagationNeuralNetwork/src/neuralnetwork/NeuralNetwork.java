@@ -66,6 +66,7 @@ public class NeuralNetwork {
 			errorsOverEpoch += "\nepoch: " + epochNumber;
 			weights += "\nepoch: " + epochNumber;
 			inputOutput += "\nepoch: " + epochNumber;
+			System.out.println("Epoch: " + epochNumber);
 			trainGenErrorPlot += "\n";
 
 			//1. Train
