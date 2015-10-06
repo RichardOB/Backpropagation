@@ -52,7 +52,7 @@ public class DataPreparator {
 		output = new double[unprocessedProblemSet.size()][outputCount];
 		
 		//Shuffle Data
-		//Collections.shuffle(unprocessedProblemSet, new Random());
+		Collections.shuffle(unprocessedProblemSet, new Random());
 		
 		//Split Data into input and output sets
 		for (int i = 0; i < unprocessedProblemSet.size(); i++) {
@@ -102,13 +102,6 @@ public class DataPreparator {
 	
 	public String convertAndAlterDataSet(double[][] dataSet, int outputCount) throws Exception {
 
-//		for (int i = 0; i < dataSet.length; i++) {
-//			for (int j = 0; j < dataSet[i].length; j++) {
-//				System.out.print(dataSet[i][j] + " ");
-//			}
-//			System.out.println("");
-//		}
-		
 		printminMax(inputMinMax);
 		printminMax(outputMinMax);
 		
@@ -149,14 +142,14 @@ public class DataPreparator {
 			
 			for (int j = 0; j < convertedInput[i].length; j++) {
 				resultString += convertedInput[i][j];
-				resultString += ",";
+				resultString += " ";
 			}
 			
 			for (int j = 0; j < convertedOutput[i].length; j++) {
 				resultString += convertedOutput[i][j];
 				
 				if (j != convertedOutput[i].length - 1) {
-					resultString += ",";
+					resultString += " ";
 				}
 			}
 			
@@ -287,9 +280,8 @@ public class DataPreparator {
 		
 		int expectedSize = unprocessedProblemSet.get(0).length;
 		
-		for (int i = 0; i < unprocessedProblemSet.size(); i++) {
-			
-			if (unprocessedProblemSet.get(i).length != expectedSize) {
+		for (Double[] unprocessedProblemSet1 : unprocessedProblemSet) {
+			if (unprocessedProblemSet1.length != expectedSize) {
 				throw new Exception("Problem set is incomplete!");
 			}
 		}
@@ -321,8 +313,8 @@ public class DataPreparator {
 	
 	public void	printminMax(double[][] minMax) {
 		
-		for (int i = 0; i < minMax.length; i++) {
-			System.out.print(minMax[i][0] + " ");
+		for (double[] minMax1 : minMax) {
+			System.out.print(minMax1[0] + " ");
 		}
 	}
 	

@@ -79,7 +79,7 @@ public class NeuralNetwork {
 			boolean better = prevTrainingErr >= trainingAccuracy;
 			errorsOverEpoch += "\nTraining Error Improvement: " + better;
 			//Record weights after current epoch
-			weights += getWeightListAsString();
+			//weights += getWeightListAsString();
 			
 			//Capture training error for next epoch
 			prevTrainingErr = trainingAccuracy;
@@ -96,6 +96,7 @@ public class NeuralNetwork {
 			
 			//Capture generalisation error for next epoch
 			prevGeneralisationErr = generalisationAccuracy;
+		
 		}
 	}
 	
@@ -328,7 +329,6 @@ public class NeuralNetwork {
 		
 		double error = 0.0;
 
-		//TODO: Is this correct way of calculating patternn error?
 		for (int i = 0; i < actualOutput.length; i++) {
 			error += Math.pow((expectedOutput[i] - actualOutput[i]),2);
 		}
